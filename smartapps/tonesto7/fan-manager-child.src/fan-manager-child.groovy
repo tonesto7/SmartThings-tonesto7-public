@@ -13,17 +13,18 @@
  *  for the specific language governing permissions and limitations under the License.
  *
  */
-
-import groovy.transform.Field
 import java.text.SimpleDateFormat
 
+public String appVer() { return "1.1.0" }
+public String appDate() { return "09/27/2018" }
+
  definition(
-    name: "Air Circulator Child",
+    name: "Fan Manager Child",
     namespace: "tonesto7",
     author: "Anthony Santilli",
     description: "Helps manage the Room Comfort using Fan/Switch and different Actuator/Sensor Triggers...",
     category: "Convenience",
-    parent: "tonesto7:Air Circulator",
+    parent: "tonesto7:Fan Manager",
     iconUrl: appImg(),
     iconX2Url: appImg(),
     iconX3Url: appImg(),
@@ -33,11 +34,6 @@ preferences {
     page(name: "mainPage")
     page(name: "namePage")
 }
-
-def textVersion()	{ return "Version: ${appVer()}" }
-def textModified()	{ return "Updated: ${appDate()}" }
-def appVer() { return "1.0.2" }
-def appDate() { return "06/4/2018" }
 
 def mainPage() {
     def allConfigured = true
@@ -294,7 +290,16 @@ def initialize() {
     subscriber()
     runEvery30Minutes("ruleCheck")
     runIn(60,"ruleCheck", [overwrite:true])
+    updateAppLabel()
     // runEvery1Minute("ruleCheck")
+}
+
+private updateAppLabel() {
+    String curLbl = app?.getLabel()
+    String disabStr = " (Paused)"
+    curLbl = curLbl?.toString()?.replace(disabStr, "")
+    if(settings?.pauseApp == true) { curLbl = curLbl + disabStr }
+    if(app?.getLabel() != curLbl) { app?.updateLabel(curLbl as String) }
 }
 
 def subscriber() {
@@ -324,7 +329,7 @@ def triggerEvtHandler(evt) {
 }
 
 def checkTstatState() {
-    String cur = tstatDevice?.currentState("thermostatOperatingState")?.value ?: ""
+    String cur = settings?.tstatDevice?.currentState("thermostatOperatingState")?.value ?: ""
     return (cur != "" && cur != null && settings?.tstatHvacStates && settings?.tstatHvacStates?.contains(cur?.toString()?.replaceAll("\\[|\\]", ""))) ? true : false
 }
 
@@ -379,7 +384,6 @@ void ruleCheck() {
     if(settings?.motionSensors) {
         if(areMotionsActive(settings?.motionSensors)) {
             def mots = getMotionsActive(settings?.motionSensors)?.collect { it?.displayName }
-            
             if(state?.speedType != null && settings?.motionActiveFanSpeed) {
                 log.info "Rule Check | Setting Speed to ${settings?.motionActiveFanSpeed} on (${settings?.fanDevice?.displayName}) | Reason: (Motion Detected (${mots})"
                 sendFanCmd(settings?.fanDevice, settings?.motionActiveFanSpeed)
@@ -446,8 +450,7 @@ void ruleCheck() {
                 } else {
                     log.trace "Rule Check | Skipping Changes... Fan Speed is already Set to (${desiredSpeed})"
                 }
-            }
-            else if(settings?.humiditySensors && humReading) {
+            } else if(settings?.humiditySensors && humReading) {
                 if(settings?.humiditySetFanSpeed) {
                     desiredSpeed = (humReading > settings?.fanOnHumidityVal) ? settings?.humiditySetFanSpeed : "off" 
                     if(desiredSpeed != currentSpeed) {
@@ -757,7 +760,9 @@ private timeDayOfWeekOptions() {
     return ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 }
 
-def appImg() { return "https://d1nhio0ox7pgb.cloudfront.net/_img/g_collection_png/standard/256x256/fan.png" }
+String appImg() { return getAppImg("fan_manager_orange.png") }
+String getAppImg(imgName) { return "https://raw.githubusercontent.com/tonesto7/smartthings-tonesto7-public/master/resources/icons/$imgName" }
+
 def appInfoSect()	{
     def str = ""
     str += "${app?.name}"

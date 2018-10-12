@@ -262,7 +262,7 @@ def updateChildLabel() {
 def createLightChild() {
 	def childDevice = getChildDevices()?.find { it.device.deviceNetworkId == "${device.deviceNetworkId}-Light" }
 	if (!childDevice) {
-		childDevice = addChildDevice("KOF Zigbee Fan Controller - Light Child Device", "${device.deviceNetworkId}-Light", null,[completedSetup: true, label: "${device.displayName} Light", isComponent: false, componentName: "fanLight", componentLabel: "Light", "data":["parent version":version]])
+		childDevice = addChildDevice("Hampton Bay Fan Controller - Light Child Device", "${device.deviceNetworkId}-Light", null,[completedSetup: true, label: "${device.displayName} Light", isComponent: false, componentName: "fanLight", componentLabel: "Light", "data":["parent version":version]])
 		log.info "Creating child light ${childDevice}"
 	}
 	else {

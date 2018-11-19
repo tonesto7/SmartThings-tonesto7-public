@@ -1,0 +1,23 @@
+V5.0.1221 (December 21st, 2017):
+▔▔▔▔▔▔▔▔▔▔▔
+Echosistant App:
+• ADDED: Support for New Reference Webpage
+
+Storage App v5.0.1221:
+• ADDED: I added the Reference page to the Storage App
+
+
+V5.0.1220 (December 20th, 2017):
+▔▔▔▔▔▔▔▔▔▔▔
+Echosistant App:
+• UPDATED: App is just about ready for alpha
+
+Profile App v5.0.1220:
+• UPDATED: App is just about ready for alpha
+
+Shortcuts App v5.0.1220:
+• UPDATED: App is just about ready for alpha
+
+Storage App v5.0.1220:
+• UPDATED: App is just about ready for alpha
+

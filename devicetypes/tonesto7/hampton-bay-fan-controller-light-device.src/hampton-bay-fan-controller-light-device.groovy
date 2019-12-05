@@ -20,7 +20,7 @@ metadata {
         capability "Switch"
         capability "Switch Level"
         capability "Light"
-        capability "Sensor" 
+        capability "Sensor"
    }
 
 	tiles(scale: 2) {
@@ -38,9 +38,9 @@ metadata {
  		valueTile("version", "version", width: 6, height: 2) {
           	state "version", label:"\n Light Child \n" + version()+"\n"
 		}
-    	main(["switch"])        
+    	main(["switch"])
 		details(["switch", "rangeValue", "level", "version"])
-    }	
+    }
 }
 
 def getIcon() {
